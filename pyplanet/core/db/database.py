@@ -7,6 +7,7 @@ import importlib
 import logging
 import peewee
 import peewee_async
+import pyplanet.utils.peewee_async_sqlite
 
 from pyplanet.core.exceptions import ImproperlyConfigured
 from .registry import Registry
