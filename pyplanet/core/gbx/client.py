@@ -173,13 +173,13 @@ class GbxClient(GbxRemote):
 				await asyncio.sleep(5)
 
 		# Try to get the script api_versions.
-		try:
-			api_versions = await self('XmlRpc.GetAllApiVersions', timeout=5)
-			if 'versions' in api_versions and self.script_api_version in api_versions['versions']:
-				await self('XmlRpc.SetApiVersion', self.script_api_version, response_id=False)
-			self.script_api_version = await self('XmlRpc.GetApiVersion')
-		except Exception as e:
-			logger.error('Can\'t set the script API Version! {}'.format(str(e)))
+		#try:
+		#	api_versions = await self('XmlRpc.GetAllApiVersions', timeout=5)
+		#	if 'versions' in api_versions and self.script_api_version in api_versions['versions']:
+		#		await self('XmlRpc.SetApiVersion', self.script_api_version, response_id=False)
+		#	self.script_api_version = await self('XmlRpc.GetApiVersion')
+		#except Exception as e:
+		#	logger.error('Can\'t set the script API Version! {}'.format(str(e)))
 
 		await self.refresh_info()
 
@@ -200,9 +200,9 @@ class GbxClient(GbxRemote):
 			self('GetVersion'),
 			self('GetSystemInfo'),
 			self('GameDataDirectory'),
-			self('GetMapsDirectory'),
+			self('GetTracksDirectory'), #self('GetMapsDirectory'),
 			self('GetSkinsDirectory'),
-			self('GetCurrentMapInfo'),
+			self('GetCurrentChallengeInfo'), #self('GetCurrentMapInfo'),
 			self('GetServerPassword'),
 			self('GetServerPasswordForSpectator'),
 			self('GetMaxPlayers'),
@@ -213,13 +213,13 @@ class GbxClient(GbxRemote):
 		version_info = res[0]
 		self.game.dedicated_version = version_info['Version']
 		self.game.dedicated_build = version_info['Build']
-		self.game.dedicated_api_version = version_info['ApiVersion']
-		self.game.dedicated_title = version_info['TitleId']
+		self.game.dedicated_api_version = version_info.get('ApiVersion', None)
+		self.game.dedicated_title = version_info.get('TitleId', None)
 
 		# System Information
 		system_info = res[1]
-		self.game.server_is_dedicated = system_info['IsDedicated']
-		self.game.server_is_server = system_info['IsServer']
+		self.game.server_is_dedicated = system_info.get('IsDedicated', None)
+		self.game.server_is_server = system_info.get('IsServer', None)
 		self.game.server_ip = system_info['PublishedIp']
 		self.game.server_p2p_port = system_info['P2PPort']
 		self.game.server_port = system_info['Port']
@@ -235,7 +235,7 @@ class GbxClient(GbxRemote):
 		self.game.game = self.game.game_from_environment(
 			res[5]['Environnement'],
 			game_name=res[0]['Name'],
-			title_id=res[0]['TitleId'],
+			title_id=res[0].get('TitleId', None),
 		)
 
 		self.game.server_password = res[6]

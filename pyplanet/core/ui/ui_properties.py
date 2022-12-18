@@ -70,7 +70,7 @@ class UIProperties:  # pragma: no cover
 			method = 'Common.UIModules.ResetProperties'
 		try:
 			logger.debug('Resetting UIProperties...')
-			await self._instance.gbx.script(method, response_id=False)
+			#await self._instance.gbx.script(method, response_id=False)
 		except Exception as e:
 			logger.warning('Unable to reset UIProperties: {}'.format(str(e)))
 
@@ -85,11 +85,11 @@ class UIProperties:  # pragma: no cover
 			if self._instance.game.game == 'tm' or self._instance.game.game == 'sm':
 				self._raw = await self._instance.gbx(method, timeout=2)
 				self._properties = xd.parse(self._raw['raw_1'])
-			else:
-				self._raw = await self._instance.gbx(method, timeout=2)
-				self._properties = dict()
-				for entry in self._raw['uimodules']:
-					self._properties[entry['id']] = entry
+			#else:
+			#	self._raw = await self._instance.gbx(method, timeout=2)
+			#	self._properties = dict()
+			#	for entry in self._raw['uimodules']:
+			#		self._properties[entry['id']] = entry
 		except Exception as e:
 			self._properties = dict()
 			self._raw = None

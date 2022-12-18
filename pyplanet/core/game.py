@@ -44,6 +44,8 @@ class _Game:
 	game = None  # tm / sm / tmnext
 
 	def game_from_environment(self, environment, game_name=None, title_id=None):
+		if game_name == 'TmForever':
+			return 'tmuf'
 		if game_name == 'Trackmania' and title_id == 'Trackmania':
 			return 'tmnext'
 		if environment in ['Canyon', 'Stadium', 'Valley', 'Lagoon']:
@@ -56,6 +58,8 @@ class _Game:
 			return 'trackmania'
 		elif self.game == 'tmnext':
 			return 'trackmania_next'
+		elif self.game == 'tmuf':
+			return 'trackmania_united'
 		return 'shootmania'
 
 Game = _Game()

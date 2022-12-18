@@ -73,19 +73,21 @@ class ModeManager(CoreContrib):
 		:param refresh: Refresh from server.
 		"""
 		if refresh or not self._current_script:
-			payload = await self._instance.gbx('GetScriptName')
-			current_value = payload['CurrentValue'].partition('.')[0]
-			if '\\' in current_value:
-				current_value = current_value.rpartition('\\')[2]
-			self._current_script = current_value
-			self._current_full_script = payload['CurrentValue']
+			#payload = await self._instance.gbx('GetScriptName')
+			payload = await self._instance.gbx('GetGameMode')
+			#current_value = payload['CurrentValue'].partition('.')[0]
+			#if '\\' in current_value:
+			#	current_value = current_value.rpartition('\\')[2]
+			#self._current_script = current_value
+			self._current_script = payload
+			#self._current_full_script = payload['CurrentValue']
 
-			if 'NextValue' in payload:
-				next_value = payload['NextValue'].partition('.')[0]
-				if '\\' in next_value:
-					next_value = next_value.rpartition('\\')[2]
-				self._next_script = next_value
-				self._next_full_script = payload['NextValue']
+			#if 'NextValue' in payload:
+			#	next_value = payload['NextValue'].partition('.')[0]
+			#	if '\\' in next_value:
+			#		next_value = next_value.rpartition('\\')[2]
+			#	self._next_script = next_value
+			#	self._next_full_script = payload['NextValue']
 
 		return self._current_script
 

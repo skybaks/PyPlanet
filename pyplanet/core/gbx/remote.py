@@ -131,7 +131,7 @@ class GbxRemote:
 		# Startup tasks.
 		await self.execute('Authenticate', self.user, self.password)
 		await asyncio.gather(
-			self.execute('SetApiVersion', self.api_version),
+			#self.execute('SetApiVersion', self.api_version),
 			self.execute('EnableCallbacks', True),
 		)
 
@@ -143,25 +143,25 @@ class GbxRemote:
 		self.dedicated_version = versions['Version']
 		self.dedicated_build = versions['Build']
 		#Make a check for SystemInformation if Dedicated = True
-		system_info = await self.execute('GetSystemInfo')
-		if system_info['IsDedicated'] == False and system_info['IsServer'] == False:
-			logger.debug('Dedicated seems to be a gameclient! Adjust `PORT` in /settings/base.py')
-			exit(50)
+		#system_info = await self.execute('GetSystemInfo')
+		#if system_info['IsDedicated'] == False and system_info['IsServer'] == False:
+		#	logger.debug('Dedicated seems to be a gameclient! Adjust `PORT` in /settings/base.py')
+		#	exit(50)
 		
 		# Check for scripted mode.
-		mode = await self.execute('GetGameMode')
-		settings = await self.execute('GetModeScriptSettings')
-		if mode == 0:
-			if 'S_UseScriptCallbacks' in settings:
-				settings['S_UseScriptCallbacks'] = True
-			if 'S_UseLegacyCallback' in settings:
-				settings['S_UseLegacyCallback'] = False
-			if 'S_UseLegacyXmlRpcCallbacks' in settings:
-				settings['S_UseLegacyXmlRpcCallbacks'] = False
-			await asyncio.gather(
-				self.execute('SetModeScriptSettings', settings),
-				self.execute('TriggerModeScriptEventArray', 'XmlRpc.EnableCallbacks', ['true'])
-			)
+		#mode = await self.execute('GetGameMode')
+		#settings = await self.execute('GetModeScriptSettings')
+		#if mode == 0:
+		#	if 'S_UseScriptCallbacks' in settings:
+		#		settings['S_UseScriptCallbacks'] = True
+		#	if 'S_UseLegacyCallback' in settings:
+		#		settings['S_UseLegacyCallback'] = False
+		#	if 'S_UseLegacyXmlRpcCallbacks' in settings:
+		#		settings['S_UseLegacyXmlRpcCallbacks'] = False
+		#	await asyncio.gather(
+		#		self.execute('SetModeScriptSettings', settings),
+		#		self.execute('TriggerModeScriptEventArray', 'XmlRpc.EnableCallbacks', ['true'])
+		#	)
 
 		logger.debug('Dedicated authenticated, API version set and callbacks enabled!')
 

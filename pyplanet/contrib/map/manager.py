@@ -65,8 +65,10 @@ class MapManager(CoreContrib):
 
 		# Get current and next map.
 		self._current_map, self._next_map = await asyncio.gather(
-			self.handle_map_change(await self._instance.gbx('GetCurrentMapInfo')),
-			self.handle_map_change(await self._instance.gbx('GetNextMapInfo')),
+			#self.handle_map_change(await self._instance.gbx('GetCurrentMapInfo')),
+			self.handle_map_change(await self._instance.gbx('GetCurrentChallengeInfo')),
+			#self.handle_map_change(await self._instance.gbx('GetNextMapInfo')),
+			self.handle_map_change(await self._instance.gbx('GetNextChallengeInfo')),
 		)
 		self._previous_map = None
 
@@ -86,7 +88,7 @@ class MapManager(CoreContrib):
 		# Get or create.
 		map_info = await Map.get_or_create_from_info(
 			uid=info['UId'], name=info['Name'], author_login=info['Author'], author_nickname=author_nickname,
-			file=info['FileName'], environment=info['Environnement'], map_type=info['MapType'], map_style=info['MapStyle'],
+			file=info['FileName'], environment=info['Environnement'], map_type=info.get('MapType', ''), map_style=info.get('MapStyle', ''),
 			num_laps=info['NbLaps'], num_checkpoints=info['NbCheckpoints'], time_author=info['AuthorTime'],
 			time_bronze=info['BronzeTime'], time_silver=info['SilverTime'], time_gold=info['GoldTime'],
 			price=info['CopperPrice'], mx_id=mx_id,
@@ -133,7 +135,8 @@ class MapManager(CoreContrib):
 			self._original_ta = None
 
 	async def update_list(self, full_update=False, detach_fks=True):
-		raw_list = await self._instance.gbx('GetMapList', -1, 0)
+		#raw_list = await self._instance.gbx('GetMapList', -1, 0)
+		raw_list = await self._instance.gbx('GetChallengeList', -1, 0)
 		updated = list()
 
 		if full_update:
@@ -161,7 +164,7 @@ class MapManager(CoreContrib):
 					details['UId'], details['FileName'], details['Name'], details['Author'],
 					author_nickname=author_nickname, environment=details['Environnement'],
 					time_gold=details['GoldTime'],
-					price=details['CopperPrice'], map_type=details['MapType'], map_style=details['MapStyle'],
+					price=details['CopperPrice'], map_type=details.get('MapType', ''), map_style=details.get('MapStyle', ''),
 					mx_id=mx_id,
 				)
 
@@ -185,7 +188,7 @@ class MapManager(CoreContrib):
 				rows.append(dict(
 					uid=details['UId'], file=details['FileName'], name=name, author_login=details['Author'],
 					author_nickname=author_nickname, environment=details['Environnement'], time_gold=details['GoldTime'],
-					price=details['CopperPrice'], map_type=details['MapType'], map_style=details['MapStyle'], mx_id=mx_id
+					price=details['CopperPrice'], map_type=details.get('MapType', ''), map_style=details.get('MapStyle', ''), mx_id=mx_id
 				))
 
 			if len(rows) > 0:
